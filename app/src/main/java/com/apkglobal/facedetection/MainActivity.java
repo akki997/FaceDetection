@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -136,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(imageUri);
         this.sendBroadcast(mediaScanIntent);
+
+
     }
 
     private void startCamera() {
@@ -264,6 +267,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 txtTakenPicDesc.setText(txtTakenPicDesc.getText() + "Smile probability:" + " " + face.getIsSmilingProbability() + "\n");
                 txtTakenPicDesc.setText(txtTakenPicDesc.getText() + "Left Eye Is Open Probability: " + " " + face.getIsLeftEyeOpenProbability() + "\n");
                 txtTakenPicDesc.setText(txtTakenPicDesc.getText() + "Right Eye Is Open Probability: " + " " + face.getIsRightEyeOpenProbability() + "\n\n");
+                if(face.getIsSmilingProbability()<=0.2)
+                {
+                    MediaPlayer mediaPlayer;
+                    mediaPlayer=MediaPlayer.create(MainActivity.this,R.raw.gaana);
+                    mediaPlayer.start();
+
+                }
+                else if(face.getIsSmilingProbability()>0.2)
+                {
+                    MediaPlayer mediaPlayer;
+                    mediaPlayer=MediaPlayer.create(MainActivity.this,R.raw.gana);
+                    mediaPlayer.start();
+
+                }
 
                 for (Landmark landmark : face.getLandmarks()) {
                     int cx = (int) (landmark.getPosition().x);
@@ -307,6 +324,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         detector.release();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 }
 
